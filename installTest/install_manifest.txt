@@ -1,0 +1,4 @@
+D:/cmake_test/cmake-practice/installTest/shared_vc/bin/installTest.exe
+D:/cmake_test/cmake-practice/installTest/shared_vc/include/config.h
+D:/cmake_test/cmake-practice/installTest/shared_vc/lib/MathFunctions.lib
+D:/cmake_test/cmake-practice/installTest/shared_vc/include/MathFunctions.h
