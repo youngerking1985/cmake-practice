@@ -6,4 +6,4 @@ project (cmake-practice)
 
 #添加子目录
 add_subdirectory(math)
-add_subdirectory(example)
+# add_subdirectory(example)

@@ -1,0 +1,2 @@
+# generate static lib test
+## 

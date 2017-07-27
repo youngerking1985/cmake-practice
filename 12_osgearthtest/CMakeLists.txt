@@ -1,0 +1,87 @@
+# CMake 最低版本要求
+cmake_minimum_required (VERSION 2.8)
+
+# 项目信息
+project (cmake-practice)
+
+CMAKE_MINIMUM_REQUIRED(VERSION 2.4.7)
+SET(CMAKE_DEBUG_POSTFIX "d" CACHE STRING "add a postfix for Debug mode, usually d on windows")
+
+IF(COMMAND CMAKE_POLICY)
+    CMAKE_POLICY(SET CMP0003 NEW)
+ENDIF(COMMAND CMAKE_POLICY)
+
+SET(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/CMakeModules/;${CMAKE_MODULE_PATH}")
+SET(CMAKE_DEBUG_POSTFIX "d" CACHE STRING "add a postfix, usually d on windows")
+
+IF(WIN32)
+    if(MSVC)
+        ADD_DEFINITIONS( -D_SCL_SECURE_NO_WARNINGS)
+        ADD_DEFINITIONS( -D_CRT_SECURE_NO_DEPRECATE)    
+    ENDIF(MSVC)
+ELSE(WIN32)
+	SET(CMAKE_CXX_FLAGS "-W -Wall -Wno-unused")
+ENDIF(WIN32)
+
+FIND_PATH(OPENSCENEGRAPH_INCLUDE_DIR osg/Referenced
+	# PATHS
+	# $ENV{OSG_ROOT}/include
+	# $ENV{OSG_DIR}/include
+	# $ENV{OSGDIR}/include
+	# /usr/lib
+	# /usr/local/lib
+	)
+FIND_PATH(OPENSCENEGRAPH_LIB_DIR libosg.so osg.lib
+	PATHS
+	$ENV{OSG_ROOT}/include
+	$ENV{OSG_DIR}/include
+	$ENV{OSGDIR}/lib
+	/usr/lib
+	/usr/local/lib
+	)
+FIND_PATH(OSGEARTH_INCLUDE_DIR osgEarth/Version
+	# PATHS	
+	)
+FIND_PATH(OSGEARTH_LIB_DIR libosgEarth.so osgEarth.lib
+	PATHS
+	$ENV{OSGEARTHDIR}/lib
+	/usr/lib
+	/usr/local/lib
+	)
+
+
+MESSAGE("osg include   " + ${OPENSCENEGRAPH_INCLUDE_DIR})
+MESSAGE("osg lib   " + ${OPENSCENEGRAPH_LIB_DIR})
+MESSAGE("osgearth include   " + ${OSGEARTH_INCLUDE_DIR})
+MESSAGE("osgearth lib   " + ${OSGEARTH_LIB_DIR})
+
+INCLUDE_DIRECTORIES(${OPENSCENEGRAPH_INCLUDE_DIR} ${OSGEARTH_INCLUDE_DIR})
+LINK_DIRECTORIES(${OPENSCENEGRAPH_LIB_DIR} ${OSGEARTH_LIB_DIR})
+
+SET(EXAMPLE_NAME 12_osgearthtest)
+SET(EXAMPLE_FILES main.cpp)
+
+ADD_EXECUTABLE(${EXAMPLE_NAME} ${EXAMPLE_FILES})
+SET_TARGET_PROPERTIES(${EXAMPLE_NAME} PROPERTIES DEBUG_POSTFIX "${CMAKE_DEBUG_POSTFIX}" )
+
+FUNCTION (LINK_EXAMPLE targetName libName)	
+	TARGET_LINK_LIBRARIES(${targetName} debug ${libName}${CMAKE_DEBUG_POSTFIX} optimized ${libName})
+ENDFUNCTION()
+
+LINK_EXAMPLE(${EXAMPLE_NAME} osg)
+LINK_EXAMPLE(${EXAMPLE_NAME} osgDB)
+LINK_EXAMPLE(${EXAMPLE_NAME} osgViewer)
+LINK_EXAMPLE(${EXAMPLE_NAME} osgGA)
+LINK_EXAMPLE(${EXAMPLE_NAME} osgEarthUtil)
+
+# TARGET_LINK_LIBRARIES(${EXAMPLE_NAME} debug osgd optimized osg)
+# TARGET_LINK_LIBRARIES(${EXAMPLE_NAME} debug osgDBd optimized osgDB)
+# TARGET_LINK_LIBRARIES(${EXAMPLE_NAME} debug osgViewerd optimized osgViewer)
+
+INSTALL (TARGETS ${EXAMPLE_NAME} DESTINATION bin)
+
+#消息输出测试
+message ("Hello World")
+message ("bin_dir " + ${PROJECT_BINARY_DIR})
+message ("source_dir " + ${PROJECT_SOURCE_DIR})
+message ("get env " + $ENV{OSGDIR}"")

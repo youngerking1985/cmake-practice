@@ -63,6 +63,7 @@ def my_configure( str_target , str_config , str_project_name, is_osg = False , o
         cmake_string += ' -G ' + CMAKE_VC_PLATFORM
         cmake_string += ' -DCMAKE_INSTALL_PREFIX="./shared_vc/" '       
     
+    # cmake_string += "  -DCMAKE_BUILD_TYPE=Debug/Release"
     cmake_string += ' ' + str_config+ ' ../' + str_project_name
 
     #»ñÈ¡CMakeLists.txtÂ·¾¶
